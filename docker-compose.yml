@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - 3000:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST_NAME: 'db'
+      DB_DATABASE_NAME: 'rails'
+      DB_USER_NAME: 'root'
+      DB_PASSWORD: ''
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/app
+      - node-modules:/app/node_modules
+      - web-bundle:/usr/local/bundle
+    command: >
+      sh -c "
+        rm -f /app/tmp/pids/server.pid
+        rails s -b 0.0.0.0 -p 3000
+      "
+
+  db:
+    image: mysql/mysql-server:8.0
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    stdin_open: true
+    tty: true
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  web-bundle:
+  mysql-data:
+  node-modules:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/node_modules
+      o: bind
