@@ -1,4 +1,4 @@
-# rails7
+# Operation-verify-rails
 
 動作検証用のシンプルなRails7アプリケーション
 
@@ -7,7 +7,7 @@
 #### 1. リポジトリをクローン
 
 ```bash
-git clone https://github.com/kuroweb/rails7.git
+git clone https://github.com/dudkodmytrii007/Operation-verify-rails.git
 cd rails7
 ```
 
